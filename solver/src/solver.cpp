@@ -23,25 +23,21 @@ void Solver::solve(){
         { //evaluate function and gradiant at point x_k
             grad_k = param.dfun(x_k);
 
-            std::cout<<"iteration: "<< m_iter<<";"<< x_k[0]<<";"<<x_k[1]<< std::endl;
+            //std::cout<<"iteration: "<< m_iter<<";"<< x_k[0]<<";"<<x_k[1]<< std::endl;
 
             alpha_k = search_alpha(param.method, x_k, grad_k, buffer_fun, m_iter);//computes alpha_k with expressed method, default: armijo
 
 
             //now we update x_k and compute diff_x_k
-            std::cout<<"value of alpha_k  "<< alpha_k<< std::endl;
 
             diff_x_k = 0.0;
             for (unsigned kk = 0; kk < param.dim; ++kk){
                 buffer_x = x_k[kk]; 
-                std::cout<<"value of grad  "<< grad_k[kk]<< std::endl;
                 x_k[kk] = x_k[kk] - alpha_k*grad_k[kk];
 
                 diff_x_k += fabs(buffer_x - x_k[kk]);
 
             }
-            // std::cout<<"f_eval_k "<< f_eval_k << " buffer "<< buffer_x << " x_k[1] " << x_k[1] << "grad_k[1]"<<grad_k[1]<<std::endl;
-
 
             f_eval_k = param.fun(x_k);
 

@@ -63,13 +63,9 @@ int main(int argc, char **argv){
     p.h = gp((section2 + "h").data(), 0.1);
     p.mu = gp((section2 + "mu").data(), 0.2);
 
-
-    std::cout<<"MAIN FILE: "<< p.method<< std::endl;
-
     //for now initialize the functions like this:
     p.fun = obj_func;
     p.dfun = grad_fun;
-
 
     //Initialize the solver and compute the solution
 

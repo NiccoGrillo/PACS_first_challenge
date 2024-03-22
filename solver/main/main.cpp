@@ -10,7 +10,7 @@ double obj_func(std::vector<double> x){
 std::vector<double> grad_fun(std::vector<double> x){
     std::vector<double> buf;
 
-    buf.push_back(x[1] + 12*pow(x[0], 3) + 3);
+    buf.push_back(x[1] + 16*pow(x[0], 3) + 3);
     buf.push_back(x[0] + 2*x[1]);
     return buf;
 }

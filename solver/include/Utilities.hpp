@@ -15,7 +15,6 @@ struct Parameters{
     double tol_fun = 1e-6;
     double tol_res = 1e-6;
     double initial_step = 2;
-    double h = 0.1;
     std::function<double(const std::vector<double> &)> fun;
     std::function<std::vector<double>(const std::vector<double> &)> dfun;
     std::vector<double> initial;

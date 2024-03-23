@@ -23,30 +23,63 @@ clean:
 
 
 
+# # CC = g++
+# # CFLAGS = -Wall -std=c++17
+
+# # # Specify output executable name
+# # OUTPUT = myprogram
+
+# # # List object (.o) files corresponding to each .cpp file
+# # OBJECTS = $(patsubst %.cpp,%.o,$(wildcard *.cpp)) \
+# # 			$(patsubst %.cpp,%.o,$(wildcard ../src/*.cpp))
+# #            # Add this line
+# # # Include paths for headers
+# # INCLUDEPATHS = -I../include -I../src
+
+# # # Default target rule
+# # $(OUTPUT): $(OBJECTS)
+# # 	$(CC) $(CFLAGS) $^ -o $@ 
+
+# # # Compile objects from sources
+# # ../src/%.o : ../src/%.cpp
+# # 	@echo "compiling $@ from files $<"
+# # 	$(CC) $(CFLAGS) $(INCLUDEPATHS) -c $< -o $@
+# # %.o : %.cpp 
+# # 	@echo "compiling $@ from files $<"
+# # 	$(CC) $(CFLAGS) $(INCLUDEPATHS) -c $< -o $@
+
+# # clean:
+# # 	rm -f $(OBJECTS) $(OUTPUT)
+
+
+
 # CC = g++
-# CFLAGS = -Wall -std=c++17
-# # LDFLAGS = -lgetpot
+# CFLAGS = -Wall -std=c++17 -MMD -MP
+
+# # Include paths for headers
+# INCLUDEPATHS = -I../include -I../src
 
 # # Specify output executable name
 # OUTPUT = myprogram
 
-# # List object (.o) files corresponding to each .cpp file
-# OBJECTS = $(patsubst %.cpp,%.o,$(wildcard src/*.cpp)) \
-#           $(patsubst %.cpp,%.o,$(wildcard main/*.cpp)) # Add this line
-# # Include paths for headers
-# INCLUDEPATHS = -I./include -I./src
+# # Source directories
+# SRCDIR = . ../src
+
+# # Find all .cpp files and their corresponding .o files
+# SOURCES := $(foreach dir,$(SRCDIR),$(wildcard $(dir)/*.cpp))
+# OBJECTS := $(SOURCES:.cpp=.o)
+# DEPS := $(patsubst %.cpp,%.o,$(wildcard ../src/*.cpp))
 
 # # Default target rule
 # $(OUTPUT): $(OBJECTS)
-# 	$(CC) $(CFLAGS) $^ -o $@ 
+# 	$(CC) $(CFLAGS) $^ -o $@ $(INCLUDEPATHS)
 
 # # Compile objects from sources
-# src/%.o : src/%.cpp
-# 	@echo "compiling $@ from files $<"
-# 	$(CC) $(CFLAGS) $(INCLUDEPATHS) -c $< -o $@
-# main/%.o : main/%.cpp 
-# 	@echo "compiling $@ from files $<"
+# %.o: %.cpp
+# 	@echo "Compiling $< to $@"
 # 	$(CC) $(CFLAGS) $(INCLUDEPATHS) -c $< -o $@
 
+# -include $(DEPS)
+
 # clean:
-# 	rm -f $(OBJECTS) $(OUTPUT)
+# 	rm -f $(OBJECTS) $(DEPS) $(OUTPUT)

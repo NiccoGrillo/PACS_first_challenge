@@ -4,18 +4,17 @@
         x0_1 = 0
         x0_2 = 0
         fun = 'x1*x2 + 4*x1*x1*x1*x1 + x2*x2 + 3*x1'
-        dfun_1 = 'x2* + 16*x1*x1*x1 + 3' #this is the gradient vector of the function.
+        dfun_1 = 'x2 + 16*x1*x1*x1 + 3' #this is the gradient vector of the function.
         dfun_2 = 'x1 + 2*x2'
     [../]
 
     [./other_params]
-        method = 1 # USE: 1 for EXP, 2 for INV, any positive int for AMIRJO
-        initial_step = 1
+        method = 10 # USE: 1 for EXP, 2 for INV, any positive int for AMIRJO
+        initial_step = 1 #alpha_0
         nmax_it = 100
-        tol_res = 1e-8
-        tol_fun = 1e-8
+        tol_res = 1e-7
+        tol_fun = 1e-7
         sigma = 0.25
-        h = 0.1
-        mu = 0.1
+        mu = 0.05
     [../]
 [../]

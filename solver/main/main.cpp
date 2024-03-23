@@ -1,5 +1,7 @@
 #include "solver.cpp"
 #include "GetPot"
+#include "solver.hpp"
+#include "Utilities.hpp"
 
 
 // manually setting the func and gradient from the main while I fix muparserx
@@ -15,18 +17,9 @@ std::vector<double> grad_fun(std::vector<double> x){
     return buf;
 }
 
-
-
-
-
-
 int main(int argc, char **argv){
-    
 
-    
     Parameters p;
-
-
 
     GetPot command_line(argc, argv);
     const std::string filename = command_line.follow("parameters_input.dat", 2, "-f", "--file");
@@ -60,7 +53,6 @@ int main(int argc, char **argv){
     p.nmax_it = gp((section2 + "nmax_it").data(), 1e-6);
     p.tol_res = gp((section2 + "tol_res").data(), 1e-6);
     p.sigma = gp((section2 + "sigma").data(), 0.25);
-    p.h = gp((section2 + "h").data(), 0.1);
     p.mu = gp((section2 + "mu").data(), 0.2);
 
     //for now initialize the functions like this:
@@ -69,18 +61,23 @@ int main(int argc, char **argv){
 
     //Initialize the solver and compute the solution
 
-    Solver my_solver(p);
 
-    my_solver.solve();
-
-
+    if (p.method == 1){//exponential method
+        std::cout<<"----Using EXPONENTIAL updates for learning rate----\n\n"<<std::endl;
+        Solver_exp my_solver(p);
+        my_solver.solve();
+    }
+    else if (p.method == 2){ //inverse method
+        std::cout<<"----Using INVERSE updates for learning rate----\n\n"<<std::endl;
+        Solver_inv my_solver(p);
+        my_solver.solve();
+    }
+    else { //armijo method
+        std::cout<<"----Using ARMIJO updates for learning rate----\n\n"<<std::endl;
+        Solver_arm my_solver(p);
+        my_solver.solve();
+    }
 
     return 0;
     
-
-
-
-    
-
-
 }

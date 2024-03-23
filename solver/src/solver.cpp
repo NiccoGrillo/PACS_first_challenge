@@ -1,5 +1,9 @@
 #include "solver.hpp"
 
+
+
+// For all classes:
+
 Solver::Solver(const Parameters &param_): param(param_){
     solution.resize(param.dim, 0.0);
 };
@@ -22,10 +26,7 @@ void Solver::solve(){
         for (unsigned m_iter = 1; !converged; ++m_iter)
         { //evaluate function and gradiant at point x_k
             grad_k = param.dfun(x_k);
-
-            //std::cout<<"iteration: "<< m_iter<<";"<< x_k[0]<<";"<<x_k[1]<< std::endl;
-
-            alpha_k = search_alpha(param.method, x_k, grad_k, buffer_fun, m_iter);//computes alpha_k with expressed method, default: armijo
+            alpha_k = search_alpha(x_k, grad_k, buffer_fun, m_iter);//computes alpha_k with expressed method, default: armijo
 
 
             //now we update x_k and compute diff_x_k
@@ -70,46 +71,6 @@ void Solver::solve(){
 
 }
 
-
-double Solver::search_alpha(const unsigned short method,
-            const std::vector<double> &x,
-            const std::vector<double> &grad_k,
-            const double &val,
-            const unsigned k){
-    double alpha_k = param.initial_step;
-
-
-    if (method == 1){//exponential method
-        alpha_k = param.initial_step*exp(-1*param.mu * k);
-        //std::cout<<"ci arrivo qui?    alpha:"<<param.initial_step << ";"<< alpha_k<< ";"<<param.mu << ";"<< k<<std::endl;
-    }
-    else if (method == 2){ //inverse method
-        alpha_k = param.initial_step * (1/(1+param.mu * k));
-    }
-    else {  //amijo, which is the default one
-        std::vector<double> diff_vec(param.dim, 0);
-
-
-
-        for (unsigned kk = 0; kk < param.dim; kk++){
-            diff_vec[kk] = x[kk] - alpha_k*grad_k[kk];
-        }
-        //bool check = true;
-        while(val - param.fun(diff_vec) < param.sigma*alpha_k*compute_norm2(grad_k)){
-            alpha_k = alpha_k/2.0;
-            for (unsigned kk = 0; kk < param.dim; kk++){
-                diff_vec[kk] = x[kk] - alpha_k*grad_k[kk];
-            }
-        }
-        }
-    return alpha_k;
-}
-    
-
-
-
-
-
 double Solver::compute_norm2(const std::vector<double> &vec){
     double sum = 0.0;
     for (auto i:vec){
@@ -118,3 +79,58 @@ double Solver::compute_norm2(const std::vector<double> &vec){
     return sum;
 
 }
+
+
+//FOR DERIVED CLASSES
+
+//armijo method --- para.method == 0
+double Solver_arm::search_alpha(
+            const std::vector<double> &x,
+            const std::vector<double> &grad_k,
+            const double &val,
+            const unsigned k){
+    double alpha_k = param.initial_step;
+    std::vector<double> diff_vec(param.dim, 0);
+
+    for (unsigned kk = 0; kk < param.dim; kk++){
+        diff_vec[kk] = x[kk] - alpha_k*grad_k[kk];
+    }
+    while(val - param.fun(diff_vec) < param.sigma*alpha_k*compute_norm2(grad_k)){
+        alpha_k = alpha_k/2.0;
+        for (unsigned kk = 0; kk < param.dim; kk++){
+            diff_vec[kk] = x[kk] - alpha_k*grad_k[kk];
+        }
+    }
+    return alpha_k;
+
+}
+
+
+//exponential method --- para.method==1
+double Solver_exp::search_alpha(
+            const std::vector<double> &x,
+            const std::vector<double> &grad_k,
+            const double &val,
+            const unsigned k){
+    return param.initial_step*exp(-1*param.mu * k);
+}
+
+//inverse method --- para.method == 2
+double Solver_inv::search_alpha(
+            const std::vector<double> &x,
+            const std::vector<double> &grad_k,
+            const double &val,
+            const unsigned k){
+    return param.initial_step * (1/(1+param.mu * k));
+
+}
+
+
+
+
+
+
+
+
+
+

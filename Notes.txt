@@ -1,0 +1,8 @@
+README contains clear instructions.
+The code is well organized and readable.
+
+The inheritance structure of the classes is a good idea and well implemented.
+
+You could avoid using for loops for the operations on std::vectors using more efficient methods of the std library.
+
+The extra methods are not implemented but there is an extension to 3d case.
